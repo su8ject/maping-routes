@@ -1,7 +1,7 @@
 import tabs from "./tabs.json"
 import {Navigate, Route, RouterProvider, createBrowserRouter, createRoutesFromElements} from "react-router-dom";
-import {Suspense, lazy} from "react";
-import { Layout } from "./components/layout";
+import {Suspense, createElement, lazy} from "react";
+import {Layout} from "./components/layout";
 
 function App() {
     const sortTabs = tabs.sort((a, b) => {
@@ -11,18 +11,16 @@ function App() {
     });
 
     const routes = createRoutesFromElements(
-        <Route element={<Layout tabs={sortTabs}/>}>
+        <Route element={<Layout tabs={sortTabs}/>}> 
             <Route index element={<Navigate to={tabs[0].id}/>}/>
-            {sortTabs.map((tab, i) => {
-                const Component = lazy(() => import(`./${tab.path}`));
-                console.log(`./${tab.path}`);
+            {sortTabs.map((tab) => {
                 return (
                     <Route
-                    element={<Suspense><Component/></Suspense>}
-                    path={`/${tab.id}`}
-                    key={i}
+                    path={`${tab.id}`}
+                    element={createElement(lazy(() => import(`./${tab.path}`)))}
+                    key={tab.order}
                     />
-                )
+                );
             })
         }
         </Route>
@@ -31,7 +29,9 @@ function App() {
     const router = createBrowserRouter(routes);
 
     return (
-        <RouterProvider router={router}/>
+        <Suspense>
+            <RouterProvider router={router}/>
+        </Suspense>
     );
 }
 
