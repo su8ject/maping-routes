@@ -1,4 +1,4 @@
-import {NavLink} from "react-router-dom";
+import {Link} from "react-router-dom";
 
 export const Navigation = ({tabs}) => {
     return (
@@ -6,7 +6,7 @@ export const Navigation = ({tabs}) => {
             <ul>
                 {tabs.map((tab, i) => (
                     <li key={i}>
-                        <NavLink to={tab.id}>{tab.title}</NavLink>
+                        <Link to={tab.id}>{tab.title}</Link>
                     </li>
                 ))}
             </ul>
